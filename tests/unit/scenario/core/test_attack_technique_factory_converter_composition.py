@@ -147,6 +147,8 @@ def test_repeated_creation_does_not_accumulate_or_mutate_inputs():
     baked = _converter_config(request=baked_request, response=baked_response)
     first_extras = ConverterConfiguration.from_converters(converters=[ROT13Converter()])
     second_extras = ConverterConfiguration.from_converters(converters=[Base64Converter()])
+    first_extras_snapshot = list(first_extras)
+    second_extras_snapshot = list(second_extras)
     factory = AttackTechniqueFactory(
         name="test",
         attack_class=_ConverterAttack,
@@ -160,8 +162,8 @@ def test_repeated_creation_does_not_accumulate_or_mutate_inputs():
     assert second.attack.attack_converter_config.request_converters == baked_request + second_extras
     assert baked.request_converters == baked_request
     assert baked.response_converters == baked_response
-    assert first_extras == ConverterConfiguration.from_converters(converters=[ROT13Converter()])
-    assert second_extras == ConverterConfiguration.from_converters(converters=[Base64Converter()])
+    assert first_extras == first_extras_snapshot
+    assert second_extras == second_extras_snapshot
 
 
 def test_create_delegates_converter_composition_to_private_helper(monkeypatch):
