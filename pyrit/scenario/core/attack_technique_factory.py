@@ -665,8 +665,6 @@ class AttackTechniqueFactory(Identifiable):
             )
             if converter_config is not None:
                 kwargs["attack_converter_config"] = converter_config
-            else:
-                kwargs.pop("attack_converter_config", None)
 
         attack = self._attack_class(**kwargs)
         return AttackTechnique(attack=attack, seed_technique=self._seed_technique)
@@ -678,7 +676,7 @@ class AttackTechniqueFactory(Identifiable):
         extra_request_converters: list[ConverterConfiguration] | None = None,
     ) -> AttackConverterConfig | None:
         """Compose the effective converter config without mutating stored or caller-owned inputs."""
-        base = (
+        base: AttackConverterConfig | None = (
             attack_converter_config_override
             if attack_converter_config_override is not None
             else self._attack_kwargs.get("attack_converter_config")
