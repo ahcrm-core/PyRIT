@@ -737,7 +737,17 @@ class AttackTechniqueFactory(Identifiable):
         attack_converter_config_override: AttackConverterConfig | None = None,
         extra_request_converters: list[ConverterConfiguration] | None = None,
     ) -> AttackConverterConfig | None:
-        """Compose the effective converter config without mutating stored or caller-owned inputs."""
+        """
+        Compose the effective converter config without mutating stored or caller-owned inputs.
+
+        Args:
+            attack_converter_config_override (AttackConverterConfig | None): Config that replaces the baked config.
+            extra_request_converters (list[ConverterConfiguration] | None): Request converters to append.
+
+        Returns:
+            AttackConverterConfig | None: The selected config with any extra request converters appended,
+                or None when neither a config nor extra converters are present.
+        """
         base: AttackConverterConfig | None = (
             attack_converter_config_override
             if attack_converter_config_override is not None
